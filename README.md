@@ -14,8 +14,6 @@
 ### 截图
 ![数据交互](https://github.com/magdsnail/nestjs-admin/blob/master/images/data-inter.png)
 
-
-
 #### 特别鸣谢
 
 - 感谢 [eladmin](https://github.com/elunez/eladmin/)

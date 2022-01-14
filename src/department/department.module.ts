@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Department, DepartmentSchema } from '../schemas/sys/department';
 import { DepartmentController } from './department.controller';
 import { DepartmentService } from './department.service';
+import * as mongoosePaginate from 'mongoose-paginate-v2'
 
 @Module({
   imports: [

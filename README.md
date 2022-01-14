@@ -13,6 +13,7 @@
 
 ### 截图
 ![数据交互](https://github.com/magdsnail/nestjs-admin/blob/master/images/data-inter.png)
+![nestjs中使用的err状态码](https://github.com/magdsnail/nestjs-admin/blob/master/images/nest-err-code.png)
 
 #### 特别鸣谢
 

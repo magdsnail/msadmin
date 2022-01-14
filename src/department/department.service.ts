@@ -20,6 +20,8 @@ export class DepartmentService {
         }
         const { docs, totalDocs, totalPages } = await this.department.paginate({
             parent_id: ''
+        },{
+            page, limit
         });
         const list = [];
         for (let v of docs) {

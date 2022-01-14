@@ -7,7 +7,16 @@ import { DepartmentService } from './department.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Department.name, schema: DepartmentSchema }])
+    MongooseModule.forFeatureAsync([
+      {
+        name: Department.name,
+        useFactory: () => {
+          const schema = DepartmentSchema;
+          schema.plugin(mongoosePaginate);
+          return schema;
+        },
+      },
+    ]),
   ],
   controllers: [DepartmentController],
   providers: [DepartmentService],

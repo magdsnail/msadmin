@@ -11,8 +11,8 @@
 |  admin   | admin | 超级管理员 |
 
 
-### 系统截图
-![](https://s1.ax1x.com/2021/12/11/oTia3n.png)
+### 截图
+![数据交互](https://github.com/magdsnail/nestjs-admin/blob/master/images/data-inter.png)
 
 
 

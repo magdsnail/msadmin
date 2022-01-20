@@ -12,7 +12,18 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
 		const request = ctx.getRequest<Request>();
 		const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 		let customCode = status;
-		let customMsg = exception.message;
+		let customMsg: string;
+		if (exception instanceof HttpException) {
+			const response = exception.getResponse();
+			const message = (response as any).message ?? response;
+			if (Array.isArray(message)) {
+				customMsg = message[0]
+			} else {
+				customMsg = exception.message;
+			}
+		} else {
+			customMsg = `${exception}`
+		}
 		try {
 			const { code, message } = JSON.parse(exception.message);
 			customCode = code;

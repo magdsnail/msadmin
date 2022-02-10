@@ -16,6 +16,7 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { MenuModule } from './menu/menu.module';
 import { RolesGuard } from './guard/roles.guard';
+import { DynamicModule } from './dynamic/dynamic.module';
 
 @Module({
 	imports: [
@@ -43,7 +44,8 @@ import { RolesGuard } from './guard/roles.guard';
 		UserModule,
 		AuthModule,
 		JobModule,
-		MenuModule
+		MenuModule,
+		DynamicModule
 	],
 	controllers: [AppController],
 	providers: [AppService,

@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisModule } from './redis/redis.module';
+import { RedisService } from './redis/redis.service';
 import { RequestModule } from './request/request.module';
 import { RequestService } from './request/request.service';
 
@@ -41,7 +42,7 @@ import { RequestService } from './request/request.service';
             inject: [ConfigService]
         })
     ],
-    providers: [RequestService],
-    exports: [RequestService]
+    providers: [RequestService, RedisService],
+    exports: [RequestService, RedisService]
 })
 export class DynamicModule { }

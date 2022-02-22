@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { customAlphabet, nanoid } from 'nanoid';
 
 interface TimeOptions {
     y?: string;
@@ -23,6 +24,15 @@ export default {
         return `${Date.now() / 1000 | 0}`;
     },
 
+    /**
+    * @description: 生成一个UUID
+    * @param {*}
+    * @return {*}
+    */
+     generateUUID(): string {
+        return nanoid();
+    },
+    
     /**
     * md5 算法
     * @param str 

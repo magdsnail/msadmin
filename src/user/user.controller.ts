@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 import { AuthService } from '../auth/auth.service';
 import { LoginDTO } from './dto/user.dto'
 import { AuthGuard } from '@nestjs/passport';
-import { UserInfoResponse } from './vo/user-info.vo';
+import { ResImageCaptcha, UserInfoResponse } from './vo/user-info.vo';
 import { TokenResponse } from './vo/token.vo';
 import { JwtAuthGuard } from '../guard/jwt-auth.guard';
 import { SkipAuth } from '../decorator/skip-auth.decorator';
@@ -41,6 +41,14 @@ export class UserController {
         // console.log('JWT验证 - Step 1: 用户请求登录');
         const user = await this.authService.validateUser(loginParmas.username, loginParmas.password);
         return await this.authService.certificate(user);
+    }
+
+    @Get('captchaImage')
+    @SkipAuth()
+    @ApiOkResponse({ type: ResImageCaptcha, description: '获取图片验证码' })
+    @ApiOperation({ summary: '获取图片验证码' })
+    async captchaImage() {
+        return await this.userService.createImageCaptcha();
     }
 
     @Get('auth/me')

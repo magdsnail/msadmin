@@ -13,12 +13,17 @@ import { DepartmentService } from '../department/department.service';
 import { DataPermission } from '../common/data.permission.enum';
 import { MenuService } from '../menu/menu.service';
 import { Menu } from 'src/schemas/sys/menu';
+import * as svgCaptcha from 'svg-captcha';
+import helper from '../utils/helper'
+import { CAPTCHA_IMG_KEY } from '../contants/redis.contant';
+import { RedisService } from '../dynamic/redis/redis.service';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel(User.name)
         private readonly user: PaginateModel<UserDocument>,
+        private redisService: RedisService,
         private readonly jobService: JobService,
         private readonly roleService: RoleService,
         private readonly departmentService: DepartmentService,
@@ -34,6 +39,25 @@ export class UserService {
         return user;
     }
 
+     /* 创建验证码图片 */
+     async createImageCaptcha() {
+        const svg = svgCaptcha.create({
+            size: 4,
+            color: true,
+            noise: 4,
+            width: 150,
+            height: 50,
+            charPreset: '1234567890'
+        });
+        const result = {
+            img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString(
+                'base64',
+            )}`,
+            uuid: helper.generateUUID(),
+        };
+        await this.redisService.getRedis('admin').set(`${CAPTCHA_IMG_KEY}:${result.uuid}`, svg.text, 'EX', 60 * 5);
+        return result;
+    }
     /**
      * 用户列表
      * @param item 

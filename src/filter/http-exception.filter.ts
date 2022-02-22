@@ -3,6 +3,7 @@ import { classToPlain, plainToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 import { rmSync } from 'fs';
 import { Logger } from '../utils/log4js';
+import { ApiException } from '../exceptions/api.exception';
 
 @Catch()
 export class HttpExceptionFilter<T> implements ExceptionFilter {
@@ -11,7 +12,10 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
 		const response = ctx.getResponse<Response>();
 		const request = ctx.getRequest<Request>();
 		const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-		let customCode = status;
+		let customCode =
+			exception instanceof ApiException
+				? (exception as ApiException).getErrorCode()
+				: status;
 		let customMsg: string;
 		if (exception instanceof HttpException) {
 			const response = exception.getResponse();
@@ -29,7 +33,7 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
 			customCode = code;
 			customMsg = message;
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 		}
 
 		const logFormat = ` <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

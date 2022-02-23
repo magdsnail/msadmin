@@ -10,8 +10,8 @@ export class ApiException extends HttpException {
    */
   private errorCode: number;
 
-  constructor(errorCode: number) {
-    super(ErrorCodeMap[errorCode], 200);
+  constructor(errorCode: number, msg?: any) {
+    super(msg ?? ErrorCodeMap[errorCode], 200);
     this.errorCode = errorCode;
   }
 

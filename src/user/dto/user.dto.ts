@@ -9,4 +9,12 @@ export class LoginDTO {
     @ApiProperty()
     @IsNotEmpty({ message: '密码不能为空' })
     password: string;
+
+    @ApiProperty({ description: 'uuid码' })
+    @IsString()
+    uuid: string
+    
+    @ApiProperty({ description: '验证码code' })
+    @IsString()
+    code: string
 }

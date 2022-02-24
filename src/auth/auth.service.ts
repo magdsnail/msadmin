@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { encryptPassword } from '../utils/cryptogram';
 import { AppCode } from '../common/code.enum';
 import { RedisService } from '../dynamic/redis/redis.service';
-import { CAPTCHA_IMG_KEY } from '../contants/redis.contant';
+import { CAPTCHA_IMG_KEY, USER_TOKEN_KEY, USER_VERSION_KEY } from '../contants/redis.contant';
 import { ApiException } from '../exceptions/api.exception';
 
 @Injectable()

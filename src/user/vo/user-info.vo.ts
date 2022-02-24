@@ -39,19 +39,25 @@ export class UserInfoResponse {
 export class ImageCaptcha {
     @ApiProperty({ description: 'base64图片编码' })
     img: string
-    
+
     @ApiProperty({ description: 'uuid码' })
     uuid: string
 }
+
+export class ImageInfoVO {
+    @ApiProperty({ type: ImageCaptcha })
+    info: ImageCaptcha
+}
+
 export class ResImageCaptcha {
     @ApiProperty({ description: '状态码', example: 200, })
     code: number
 
     @ApiProperty({
         description: '数据',
-        type: () => ImageCaptcha, example: ImageCaptcha,
+        type: () => ImageInfoVO, example: ImageInfoVO,
     })
-    data: ImageCaptcha
+    data: ImageInfoVO
 
     @ApiProperty({ description: '请求结果信息', example: '请求成功' })
     msg: string

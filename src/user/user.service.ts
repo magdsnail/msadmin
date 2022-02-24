@@ -50,7 +50,9 @@ export class UserService {
             uuid: helper.generateUUID(),
         };
         await this.redisService.getRedis('admin').set(`${CAPTCHA_IMG_KEY}:${result.uuid}`, svg.text, 'EX', 60 * 5);
-        return result;
+        return {
+            info: result
+        };
     }
 
     async login(request: Request, jwttoken: string) {

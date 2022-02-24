@@ -61,5 +61,13 @@ export class AuthService {
         // }
     }
 
+     /* 判断token 是否过期 或者被重置 */
+     async validateToken(user_id: string, pv: number, restoken: string) {
+        const token = await this.redisService.getRedis('admin').get(`${USER_TOKEN_KEY}:${user_id}`)
+        if (restoken !== token) throw new ApiException(11002);
+        const passwordVersion = parseInt(await this.redisService.getRedis('admin').get(`${USER_VERSION_KEY}:${user_id}`))
+        if (pv !== passwordVersion) throw new ApiException(11001)
+    }
+
 
 }

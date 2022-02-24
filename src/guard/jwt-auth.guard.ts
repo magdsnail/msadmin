@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiException } from '../exceptions/api.exception';
 import { IS_SKIPAUTH_KEY } from '../decorator/constant';
 
 @Injectable()
@@ -23,4 +24,13 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         }
         return super.canActivate(context);
     }
+
+    /* 主动处理错误 */
+    handleRequest(err: any, user: any, info: any) {
+        if (err || !user) {
+            throw err || new ApiException(11002);
+        }
+        return user;
+    }
+
 }

@@ -2,6 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -10,12 +11,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     * 而这个请求头的内容前缀也必须为 Bearer，在解码授权令牌时，使用秘钥 secretOrKey: 'secretKey' 来将授权令牌解码为创建令牌时的 payload。
     */
     constructor(
-        private readonly config: ConfigService
+        private readonly config: ConfigService,
+        private readonly authService: AuthService
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: config.get('JWT.secretKey')
+            secretOrKey: config.get('JWT.secretKey'),
+            passReqToCallback: true,   //设置回调的第一个参数是  request
         });
     }
 
@@ -26,12 +29,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     * 当用户存在时，会将 user 对象添加到 req 中，在之后的 req 对象中，可以使用 req.user 获取当前登录用户。
     */
     // JWT验证 - Step 4: 被守卫调用
-    async validate(payload: any) {
+    async validate(request: Request, payload: any) {
         console.log(`JWT验证 - Step 4: 被JWT守卫调用`);
-        return { 
-            user_id: payload.user_id, 
-            username: payload.username,
-        };
+        const { user_id, username, pv } = payload;
+        const token = (request.headers as any).authorization.slice(7);
+        await this.authService.validateToken(user_id, pv, token);
+        return { user_id, username, pv };
     }
 
 }

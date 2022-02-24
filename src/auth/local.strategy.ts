@@ -6,14 +6,19 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(private readonly authService: AuthService) {
-        super();
+        super(
+            {
+                usernameFiled: 'username',
+                passwordField: 'password',
+                passReqToCallback: true,   //设置回调函数第一个参数为 request
+            }
+        );
     }
 
-    async validate(username: string, password: string): Promise<any> {
+    async validate(request: any, username: string, password: string): Promise<any> {
+        const body = request.body;
+        await this.authService.checkImgCaptcha(body.uuid, body.code);
         const user = await this.authService.validateUser(username, password);
-        if (!user) {
-            throw new UnauthorizedException();
-        }
         return user;
     }
 }

@@ -12,11 +12,13 @@ import { RoleService } from '../role/role.service';
 import { DepartmentService } from '../department/department.service';
 import { DataPermission } from '../common/data.permission.enum';
 import { MenuService } from '../menu/menu.service';
-import { Menu } from 'src/schemas/sys/menu';
+import { Menu } from '../schemas/sys/menu';
 import * as svgCaptcha from 'svg-captcha';
 import helper from '../utils/helper'
-import { CAPTCHA_IMG_KEY } from '../contants/redis.contant';
+import { CAPTCHA_IMG_KEY, USER_TOKEN_KEY, USER_VERSION_KEY } from '../contants/redis.contant';
 import { RedisService } from '../dynamic/redis/redis.service';
+import { Request } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -27,20 +29,12 @@ export class UserService {
         private readonly jobService: JobService,
         private readonly roleService: RoleService,
         private readonly departmentService: DepartmentService,
-        private readonly menuService: MenuService
+        private readonly menuService: MenuService,
+        private readonly configService: ConfigService
     ) { }
 
-    /**
-     * 查询是否有该用户
-     * @param username 用户名
-     */
-    async findOne(username: string): Promise<any> {
-        const user = await this.user.findOne({ username });
-        return user;
-    }
-
-     /* 创建验证码图片 */
-     async createImageCaptcha() {
+    /* 创建验证码图片 */
+    async createImageCaptcha() {
         const svg = svgCaptcha.create({
             size: 4,
             color: true,
@@ -58,6 +52,31 @@ export class UserService {
         await this.redisService.getRedis('admin').set(`${CAPTCHA_IMG_KEY}:${result.uuid}`, svg.text, 'EX', 60 * 5);
         return result;
     }
+
+    async login(request: Request, token: string) {
+        const { user } = request as any;
+        const expires = this.configService.get<number>('JWT.redisExpires');
+         //存储密码版本号，防止登录期间 密码被管理员更改后 还能继续登录
+         await this.redisService.getRedis('admin').set(`${USER_VERSION_KEY}:${user.user_id}`, 1)
+         //存储token, 防止重复登录问题，设置token过期时间(1天后 token 自动过期)，以及主动注销token。
+         await this.redisService.getRedis('admin').set(`${USER_TOKEN_KEY}:${user.user_id}`, token, 'EX', expires);
+        return {
+            info: {
+                token
+            }
+        }
+
+    }
+
+    /**
+     * 查询是否有该用户
+     * @param username 用户名
+     */
+    async findOne(username: string): Promise<any> {
+        const user = await this.user.findOne({ username });
+        return user;
+    }
+
     /**
      * 用户列表
      * @param item 
@@ -146,7 +165,7 @@ export class UserService {
         const menuIds = new Set([]);
         let menus = [];
         const userInfo = await this.user.findById(user_id);
-        if(userInfo.is_admin) {
+        if (userInfo.is_admin) {
             const { list } = await this.menuService.findAll({})
             menus = list;
         } else {

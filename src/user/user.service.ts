@@ -80,16 +80,6 @@ export class UserService {
 
     }
 
-     /* 退出登录 */
-    async logout(token: string) {
-        try {
-            const payload = this.jwtService.verify(token)
-            if (await this.redisService.getRedis('admin').get(`${USER_TOKEN_KEY}:${payload.user_id}`)) {
-                await this.redisService.getRedis('admin').del(`${USER_TOKEN_KEY}:${payload.user_id}`)
-            }
-        } catch (error) { }
-    }
-
     /**
      * 查询是否有该用户
      * @param username 用户名

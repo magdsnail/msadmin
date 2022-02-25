@@ -77,6 +77,7 @@ export class UserController {
     /* 退出登录 */
     @SkipAuth()
     @Post('logout')
+    @ApiOperation({ summary: '用户退出' })
     async logout(@Headers('Authorization') authorization: string) {
         if (authorization) {
             const token = authorization.slice(7);

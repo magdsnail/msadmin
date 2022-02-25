@@ -19,6 +19,7 @@ import { CAPTCHA_IMG_KEY, USER_TOKEN_KEY, USER_VERSION_KEY } from '../contants/r
 import { RedisService } from '../dynamic/redis/redis.service';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -26,6 +27,7 @@ export class UserService {
         @InjectModel(User.name)
         private readonly user: PaginateModel<UserDocument>,
         private redisService: RedisService,
+        private readonly jwtService: JwtService,
         private readonly jobService: JobService,
         private readonly roleService: RoleService,
         private readonly departmentService: DepartmentService,
@@ -76,6 +78,16 @@ export class UserService {
             }
         }
 
+    }
+
+     /* 退出登录 */
+    async logout(token: string) {
+        try {
+            const payload = this.jwtService.verify(token)
+            if (await this.redisService.getRedis('admin').get(`${USER_TOKEN_KEY}:${payload.user_id}`)) {
+                await this.redisService.getRedis('admin').del(`${USER_TOKEN_KEY}:${payload.user_id}`)
+            }
+        } catch (error) { }
     }
 
     /**

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Body, Query, Param, Delete, InternalServerErrorException, UseGuards, Inject, forwardRef, SetMetadata, Req } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Query, Param, Delete, InternalServerErrorException, UseGuards, Inject, forwardRef, SetMetadata, Req, Headers } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiBody, ApiOkResponse } from '@nestjs/swagger';
 import { CreateUser } from './dto/register.user.dto';
 import { UserService } from './user.service';
@@ -66,13 +66,22 @@ export class UserController {
     @ApiBearerAuth()
     @ApiOperation({ summary: '用户列表' })
     async findAll(@Query() query: QueryUser, @CurrentUser() user: UserInfoIE) {
-        return this.userService.findAll({ 
+        return this.userService.findAll({
             ...query,
             page: Number(query.page || 1),
             limit: Number(query.limit || 20),
-            user 
+            user
         });
     }
 
+    /* 退出登录 */
+    @SkipAuth()
+    @Post('logout')
+    async logout(@Headers('Authorization') authorization: string) {
+        if (authorization) {
+            const token = authorization.slice(7);
+            await this.userService.logout(token);
+        }
+    }
 
 }

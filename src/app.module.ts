@@ -27,7 +27,7 @@ import { DynamicModule } from './dynamic/dynamic.module';
 		MongooseModule.forRootAsync({
 			imports: [ConfigModule],
 			useFactory: (configService: ConfigService) => ({
-				uri: configService.get<string>('mongoConfig.uri'),
+				uri: configService.get<string>('mongoConfig.uri')
 				// useNewUrlParser: true,
 				// useUnifiedTopology: true,
 				// useCreateIndex: true,

@@ -81,7 +81,7 @@ export class UserController {
     async logout(@Headers('Authorization') authorization: string) {
         if (authorization) {
             const token = authorization.slice(7);
-            return await this.authService.verifyToken(token);
+            return await this.authService.delToken(token);
         }
     }
 

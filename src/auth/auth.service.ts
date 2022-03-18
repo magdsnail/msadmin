@@ -69,12 +69,17 @@ export class AuthService {
         if (pv !== passwordVersion) throw new ApiException(11001)
     }
 
-    async verifyToken(token: string) {
-        const payload = this.jwtService.verify(token)
-        if (await this.redisService.getRedis('admin').get(`${USER_TOKEN_KEY}:${payload.user_id}`)) {
-            await this.redisService.getRedis('admin').del(`${USER_TOKEN_KEY}:${payload.user_id}`);
-            return {};
+    async delToken(token: string) {
+        try {
+            const payload = this.jwtService.verify(token)
+            if (await this.redisService.getRedis('admin').get(`${USER_TOKEN_KEY}:${payload.user_id}`)) {
+                await this.redisService.getRedis('admin').del(`${USER_TOKEN_KEY}:${payload.user_id}`);
+                return {};
+            }
+        } catch (error) {
+            
         }
+       
     }
 
 }

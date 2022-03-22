@@ -43,6 +43,11 @@ export default {
         return crypto.createHash('md5').update(str).digest('hex');
     },
 
+     //获取随机数
+     genRandom(num = 4): string {
+        return Math.random().toString(8).slice(-num);
+    },
+
     /**
     * sha1 算法
     * @param str 

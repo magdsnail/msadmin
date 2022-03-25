@@ -21,7 +21,6 @@ export class ApiException extends HttpException {
 }
 
 // import { HttpException } from '@nestjs/common';
-
 // export class ApiException extends HttpException {
 //   private errCode: number
 //   constructor(msg: string, errCode?: number) {

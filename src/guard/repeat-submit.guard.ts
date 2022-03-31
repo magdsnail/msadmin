@@ -1,4 +1,3 @@
-import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { REOEATSUBMIT_METADATA } from '../decorator/constant';
@@ -12,7 +11,6 @@ export class RepeatSubmitGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly redisService: RedisService,
-    @InjectRedis() private readonly redis: Redis
   ) { }
   async canActivate(
     context: ExecutionContext,

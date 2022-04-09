@@ -17,6 +17,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { MenuModule } from './menu/menu.module';
 import { RolesGuard } from './guard/roles.guard';
 import { DynamicModule } from './dynamic/dynamic.module';
+import { RepeatSubmitGuard } from './guard/repeat-submit.guard';
 
 @Module({
 	imports: [
@@ -56,6 +57,10 @@ import { DynamicModule } from './dynamic/dynamic.module';
 		{
 			provide: APP_GUARD,//roles
 			useClass: RolesGuard,
+		},
+		{
+			provide: APP_GUARD,//阻止连续提交守卫
+			useClass: RepeatSubmitGuard
 		}
 	],
 })

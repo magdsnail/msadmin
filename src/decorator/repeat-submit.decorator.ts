@@ -2,7 +2,7 @@ import { SetMetadata } from '@nestjs/common';
 import { REOEATSUBMIT_METADATA } from './constant';
 
 export class RepeatSubmitOption {
-  interval?: number = 5         //默认5s
+  interval?: number = 10       //默认5s
   message?: string = '请求过于频繁'
 }
 

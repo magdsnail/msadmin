@@ -22,7 +22,7 @@ export class RepeatSubmitGuard implements CanActivate {
     const cache = await this.redisService.getRedis('admin').get(request.url);
     const data = { body: request.body, prams: request.params, query: request.query }
     const dataString = JSON.stringify(data)
-    if (!cache) {   //没有缓存数据
+    if (!cache) {//没有缓存数据
       if (dataString) {
         await this.redisService.getRedis('admin').set(request.url, dataString, 'EX', repeatSubmitOption.interval)
       }

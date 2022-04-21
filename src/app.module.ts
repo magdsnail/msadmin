@@ -18,7 +18,6 @@ import { MenuModule } from './menu/menu.module';
 import { RolesGuard } from './guard/roles.guard';
 import { DynamicModule } from './dynamic/dynamic.module';
 import { RepeatSubmitGuard } from './guard/repeat-submit.guard';
-
 @Module({
 	imports: [
 		ConfigModule.forRoot({
